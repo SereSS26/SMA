@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Demo1</string>
+    <string name="app_title">Sarcinile mele</string>
+    <string name="app_tagline">Organizează-ți ziua</string>
+
+    <!-- Navigation -->
+    <string name="nav_tasks">Sarcini</string>
+    <string name="nav_stats">Statistici</string>
+    <string name="nav_settings">Setări</string>
+    <string name="open_menu">Deschide meniul</string>
+    <string name="drawer_lists">Liste</string>
+
+    <!-- Categories -->
+    <string name="category_all">Toate</string>
+    <string name="category_personal">Personal</string>
+    <string name="category_work">Muncă</string>
+    <string name="category_shopping">Cumpărături</string>
+
+    <!-- Priorities -->
+    <string name="priority_low">Scăzută</string>
+    <string name="priority_medium">Medie</string>
+    <string name="priority_high">Ridicată</string>
+
+    <!-- Filters -->
+    <string name="filter_all">Toate</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_done">Finalizate</string>
+
+    <!-- Tasks screen -->
+    <string name="greeting">Salut! 👋</string>
+    <string name="progress_summary">%1$d din %2$d finalizate</string>
+    <string name="empty_title">Nicio sarcină aici</string>
+    <string name="empty_subtitle">Apasă pe + ca să adaugi una nouă</string>
+    <string name="task_deleted">Sarcină ștearsă</string>
+    <string name="undo">Anulează</string>
+    <string name="delete">Șterge</string>
+    <string name="new_task">Sarcină nouă</string>
+
+    <!-- Add task sheet -->
+    <string name="task_hint">Ce ai de făcut?</string>
+    <string name="category">Categorie</string>
+    <string name="priority">Prioritate</string>
+    <string name="save">Salvează</string>
+
+    <!-- Stats screen -->
+    <string name="stats_overall">Progres general</string>
+    <string name="stats_total">Total</string>
+    <string name="stats_active">Active</string>
+    <string name="stats_done">Finalizate</string>
+    <string name="stats_by_category">Pe categorii</string>
+    <string name="stats_category_progress">%1$d/%2$d</string>
+
+    <!-- Settings screen -->
+    <string name="settings_appearance">Aspect</string>
+    <string name="settings_theme">Temă</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Luminos</string>
+    <string name="theme_dark">Întunecat</string>
+    <string name="settings_tasks">Sarcini</string>
+    <string name="settings_hide_completed">Ascunde sarcinile finalizate</string>
+    <string name="settings_hide_completed_desc">Doar în filtrul „Toate”</string>
+    <string name="settings_clear_completed">Șterge sarcinile finalizate</string>
+    <string name="settings_clear_completed_desc">%1$d sarcini finalizate</string>
+    <string name="settings_about">Despre</string>
+    <string name="settings_version">Versiune 1.0</string>
+</resources>
