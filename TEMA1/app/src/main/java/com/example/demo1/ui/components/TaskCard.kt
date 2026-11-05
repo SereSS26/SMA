@@ -184,8 +184,8 @@ fun Tag(text: String, color: Color, modifier: Modifier = Modifier) {
 private fun TaskCardPreview() {
     Demo1Theme {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            TaskCard(TodoItem(1, "Trimite raportul", category = Category.WORK, priority = Priority.HIGH), {})
-            TaskCard(TodoItem(2, "Cumpără lapte", done = true, category = Category.SHOPPING), {})
+            TaskCard(TodoItem("1", "Trimite raportul", category = Category.WORK, priority = Priority.HIGH), {})
+            TaskCard(TodoItem("2", "Cumpără lapte", done = true, category = Category.SHOPPING), {})
         }
     }
 }

@@ -48,6 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,10 +62,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.demo1.R
 import com.example.demo1.TodoViewModel
+import com.example.demo1.auth.GoogleSignIn
+import com.example.demo1.data.SyncState
 import com.example.demo1.model.Category
 import com.example.demo1.ui.components.AddTaskSheet
 import com.example.demo1.ui.screens.SettingsScreen
@@ -93,15 +97,37 @@ fun AppScaffold(viewModel: TodoViewModel) {
     val fabExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    val context = LocalContext.current
+
+    // OAuth needs the Activity, so the account picker is opened here and only its result reaches the ViewModel.
+    fun signInWithGoogle() {
+        viewModel.beginGoogleSignIn()
+        scope.launch { viewModel.onGoogleSignInResult(GoogleSignIn.requestIdToken(context)) }
+    }
+
+    fun signOut() {
+        scope.launch { GoogleSignIn.clearCredentialState(context) }
+        viewModel.signOut()
+    }
+
+    LaunchedEffect(viewModel.message) {
+        val message = viewModel.message ?: return@LaunchedEffect
+        val text = if (message.arg != null) context.getString(message.text, message.arg) else context.getString(message.text)
+        snackbarHostState.currentSnackbarData?.dismiss()
+        snackbarHostState.showSnackbar(text, withDismissAction = true)
+        // Cleared only afterwards: clearing first would restart this effect and cancel the snackbar.
+        viewModel.messageShown()
+    }
+
     val deletedMessage = stringResource(R.string.task_deleted)
     val undoLabel = stringResource(R.string.undo)
 
-    fun deleteWithUndo(id: Long) {
-        val (index, item) = viewModel.delete(id) ?: return
+    fun deleteWithUndo(id: String) {
+        val item = viewModel.delete(id) ?: return
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
             val result = snackbarHostState.showSnackbar(deletedMessage, actionLabel = undoLabel, withDismissAction = true)
-            if (result == SnackbarResult.ActionPerformed) viewModel.restore(index, item)
+            if (result == SnackbarResult.ActionPerformed) viewModel.restore(item)
         }
     }
 
@@ -221,6 +247,11 @@ fun AppScaffold(viewModel: TodoViewModel) {
                         onHideCompletedChange = { viewModel.hideCompleted = it },
                         completedCount = viewModel.todos.count { it.done },
                         onClearCompleted = viewModel::clearCompleted,
+                        syncState = viewModel.syncState,
+                        authBusy = viewModel.authBusy,
+                        onSignInWithGoogle = ::signInWithGoogle,
+                        onSignOut = ::signOut,
+                        onRetrySync = viewModel::retrySync,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -255,8 +286,10 @@ private fun AppDrawer(
         ) {
             Column {
                 Text(stringResource(R.string.app_title), style = MaterialTheme.typography.headlineSmall, color = Color.White)
+                val account = (viewModel.syncState as? SyncState.Synced)?.account
+                val name = account?.takeUnless { it.isAnonymous }?.let { it.displayName ?: it.email }
                 Text(
-                    stringResource(R.string.app_tagline),
+                    if (name != null) stringResource(R.string.drawer_greeting, name) else stringResource(R.string.app_tagline),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.85f)
                 )

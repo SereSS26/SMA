@@ -50,8 +50,8 @@ fun TasksScreen(
     totalCount: Int,
     filter: TaskFilter,
     onFilterChange: (TaskFilter) -> Unit,
-    onToggle: (Long) -> Unit,
-    onDelete: (Long) -> Unit,
+    onToggle: (String) -> Unit,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
 ) {
@@ -173,7 +173,7 @@ private fun EmptyState(modifier: Modifier = Modifier) {
 private fun TasksScreenPreview() {
     Demo1Theme {
         TasksScreen(
-            todos = listOf(TodoItem(1, "Trimite raportul"), TodoItem(2, "Mergi la sală", done = true)),
+            todos = listOf(TodoItem("1", "Trimite raportul"), TodoItem("2", "Mergi la sală", done = true)),
             doneCount = 1,
             totalCount = 2,
             filter = TaskFilter.ALL,

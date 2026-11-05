@@ -13,7 +13,7 @@ import com.example.demo1.ui.AppScaffold
 import com.example.demo1.ui.theme.Demo1Theme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: TodoViewModel by viewModels()
+    private val viewModel: TodoViewModel by viewModels { TodoViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

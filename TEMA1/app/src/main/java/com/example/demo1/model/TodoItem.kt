@@ -10,13 +10,21 @@ import com.example.demo1.ui.theme.PriorityHigh
 import com.example.demo1.ui.theme.PriorityLow
 import com.example.demo1.ui.theme.PriorityMedium
 
+/**
+ * A task as the UI sees it. [id] is a UUID string so the same task has the same key
+ * in Room and in Firestore; [createdAt] (epoch millis) keeps the list in a stable order.
+ */
 data class TodoItem(
-    val id: Long,
+    val id: String,
     val text: String,
     val done: Boolean = false,
     val category: Category = Category.PERSONAL,
     val priority: Priority = Priority.MEDIUM,
+    val createdAt: Long = 0L,
 )
+
+/** Firestore rejects longer texts (see firestore.rules), so the app never sends them. */
+const val MAX_TASK_LENGTH = 500
 
 enum class Category(@StringRes val label: Int, val color: Color) {
     PERSONAL(R.string.category_personal, CategoryPersonal),

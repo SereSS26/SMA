@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// The app talks to Firestore directly, so these rules are the only real protection.
+// Each signed-in user can read and write only their own tasks, and only in the shape the app writes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function isValidTask(task) {
+      return task.keys().hasOnly(['text', 'done', 'category', 'priority', 'createdAt'])
+        && task.keys().hasAll(['text', 'done', 'category', 'priority', 'createdAt'])
+        && task.text is string && task.text.size() > 0 && task.text.size() <= 500
+        && task.done is bool
+        && task.category in ['PERSONAL', 'WORK', 'SHOPPING']
+        && task.priority in ['LOW', 'MEDIUM', 'HIGH']
+        && task.createdAt is int;
+    }
+
+    match /users/{userId}/todos/{todoId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId) && isValidTask(request.resource.data);
+    }
+
+    // Everything else stays closed (no "test mode" left open in production).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

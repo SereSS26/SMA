@@ -166,6 +166,6 @@ private fun CategoryProgress(category: Category, done: Int, total: Int) {
 @Composable
 private fun StatsScreenPreview() {
     Demo1Theme {
-        StatsScreen(listOf(TodoItem(1, "A", done = true), TodoItem(2, "B", category = Category.WORK)))
+        StatsScreen(listOf(TodoItem("1", "A", done = true), TodoItem("2", "B", category = Category.WORK)))
     }
 }
